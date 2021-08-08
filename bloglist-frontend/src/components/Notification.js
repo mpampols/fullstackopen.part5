@@ -1,8 +1,8 @@
 import React from "react";
 
-const Notification = ({ message }) => {
+const Notification = ({ status, message }) => {
   const errorStyle = {
-    color: "red",
+    color: status === "ok" ? "green" : "red",
     background: "lightgrey",
     fontSize: 20,
     borderStyle: "solid",
@@ -11,7 +11,7 @@ const Notification = ({ message }) => {
     marginBottom: 10,
   };
   if (message) {
-    return <li style={errorStyle}>{message}</li>;
+    return <div style={errorStyle}>{message}</div>;
   } else {
     return <div></div>;
   }
