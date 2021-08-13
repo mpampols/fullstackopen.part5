@@ -10,6 +10,7 @@ const Notification = ({ status, message }) => {
     padding: 10,
     marginBottom: 10,
   };
+
   if (message) {
     return <div style={errorStyle}>{message}</div>;
   } else {
