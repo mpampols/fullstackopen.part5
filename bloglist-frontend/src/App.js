@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 
 import Blog from "./components/Blog"
 import Notification from "./components/Notification"
 import LoginForm from "./components/LoginForm"
+import CreateBlogForm from "./components/CreateBlogForm"
+import Toggable from "./components/Toggable"
 
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 
 const App = () => {
-  const [loginVisible, setLoginVisible] = useState(false)
-
   const [blogs,    setBlogs] = useState([])
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
@@ -21,13 +21,14 @@ const App = () => {
 
   const [notificationMessage, setNotificationMessage] = useState({ status: 'ok', message: ''})
 
+  const blogFormRef = useRef()
+
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    console.log(loggedUserJSON)
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
@@ -36,15 +37,9 @@ const App = () => {
   }, [])
 
   const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
-    const showWhenVisible = { display: loginVisible ? '' : 'none' }
-
     return (
       <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>Log in</button>
-        </div>
-        <div style={showWhenVisible}>
+        <Toggable buttonLabel='login'>
           <LoginForm
             handleSubmit={handleLogin}
             handleUsernameChange={({target}) => setUsername(target.value)}
@@ -52,8 +47,25 @@ const App = () => {
             username={username}
             password={password}
           />
-          <button style={showWhenVisible} onClick={() => setLoginVisible(false)}>cancel</button>
-        </div>
+        </Toggable>
+      </div>
+    )
+  }
+
+  const blogForm = () => {
+    return (
+      <div>
+        <Toggable buttonLabel='create blog post' ref={blogFormRef}>
+          <CreateBlogForm
+            addBlog={addBlog}
+            valueTitleNewBlog={valueTitleNewBlog}
+            valueAuthorNewBlog={valueAuthorNewBlog}
+            valueUrlNewBlog={valueUrlNewBlog}
+            handleAuthorBlog={handleAuthorBlog}
+            handleTitleBlog={handleTitleBlog}
+            handleUrlBlog={handleUrlBlog}
+          />
+        </Toggable>
       </div>
     )
   }
@@ -89,9 +101,11 @@ const App = () => {
   const handleTitleBlog = (event) => {
     setValueTitleNewBlog(event.target.value)
   }
+
   const handleAuthorBlog = (event) => {
     setValueAuthorNewBlog(event.target.value)
   }
+
   const handleUrlBlog = (event) => {
     setValueUrlNewBlog(event.target.value)
   }
@@ -110,6 +124,7 @@ const App = () => {
       setValueTitleNewBlog('')
       setValueAuthorNewBlog('')
       setValueUrlNewBlog('')
+      blogFormRef.current.toggleVisibility() // Hide creation form
       setNotificationMessage({status: 'ok', message: 'Blog added successfully'});
       setTimeout(() => {
         setNotificationMessage({status: 'ok', message: ''})
@@ -121,18 +136,6 @@ const App = () => {
       }, 5000)
     }
   }
-
-  const blogForm = () => (
-    <div>
-      <h2>Create new</h2>
-      <form onSubmit={addBlog}>
-        Title: <input value={valueTitleNewBlog} onChange={handleTitleBlog} /> <br/>
-        Author: <input value={valueAuthorNewBlog} onChange={handleAuthorBlog} /> <br/>
-        URL: <input value={valueUrlNewBlog} onChange={handleUrlBlog} /> <br/>
-        <button type="submit">Save</button>
-      </form>
-    </div>
-  )
 
   const blogList = () => (
     blogs.map((blog) => (
@@ -147,7 +150,7 @@ const App = () => {
       {user === null ?
         loginForm() :
         <div>
-          <p>{user.name} logged in <button onClick={handleLogoutClick}> Logout </button></p>
+          <p>{user.name} logged in <button onClick={handleLogoutClick}>logout</button></p>
           {blogForm()}
           <br/>
           {blogList()}
