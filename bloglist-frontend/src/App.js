@@ -18,6 +18,7 @@ const App = () => {
   const [valueTitleNewBlog,  setValueTitleNewBlog] = useState("")
   const [valueAuthorNewBlog, setValueAuthorNewBlog] = useState("")
   const [valueUrlNewBlog,    setValueUrlNewBlog] = useState("")
+  const [valueLikesNewBlog,  setValueLikesNewBlog] = useState("")
 
   const [notificationMessage, setNotificationMessage] = useState({ status: 'ok', message: ''})
 
@@ -73,7 +74,7 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({
+      const user = await loginService({
         username,
         password,
       })
@@ -86,6 +87,7 @@ const App = () => {
       setUsername("")
       setPassword("")
     } catch (exception) {
+      console.log(exception)
       setNotificationMessage({status: 'ko', message: 'Wrong credentials'});
       setTimeout(() => {
         setNotificationMessage({status: 'ok', message: ''})
@@ -137,9 +139,20 @@ const App = () => {
     }
   }
 
+  const addBlogLike = async id => {
+    const blogToUpdate = blogs.find(blogs => blogs.id === id)
+    const updatedBlog = {...blogToUpdate, likes: blogToUpdate.likes + 1}
+    await blogService.update(id, updatedBlog)
+    setBlogs(blogs.map((blog) => blog.id === id ? updatedBlog : blog))
+  }
+
   const blogList = () => (
     blogs.map((blog) => (
-      <Blog key={blog.id} blog={blog} />
+      <Blog
+        key={blog.id}
+        blog={blog}
+        addBlogLike={() => addBlogLike(blog.id)}
+      />
     ))
   )
 
