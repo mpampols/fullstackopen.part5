@@ -4,7 +4,7 @@ import Blog from "./components/Blog"
 import Notification from "./components/Notification"
 import LoginForm from "./components/LoginForm"
 import CreateBlogForm from "./components/CreateBlogForm"
-import Toggable from "./components/Toggable"
+import Togglable from "./components/Togglable"
 
 import blogService from "./services/blogs"
 import loginService from "./services/login"
@@ -18,7 +18,6 @@ const App = () => {
   const [valueTitleNewBlog,  setValueTitleNewBlog] = useState("")
   const [valueAuthorNewBlog, setValueAuthorNewBlog] = useState("")
   const [valueUrlNewBlog,    setValueUrlNewBlog] = useState("")
-  const [valueLikesNewBlog,  setValueLikesNewBlog] = useState("")
 
   const [notificationMessage, setNotificationMessage] = useState({ status: 'ok', message: ''})
 
@@ -40,7 +39,7 @@ const App = () => {
   const loginForm = () => {
     return (
       <div>
-        <Toggable buttonLabel='login'>
+        <Togglable buttonLabel='login'>
           <LoginForm
             handleSubmit={handleLogin}
             handleUsernameChange={({target}) => setUsername(target.value)}
@@ -48,7 +47,7 @@ const App = () => {
             username={username}
             password={password}
           />
-        </Toggable>
+        </Togglable>
       </div>
     )
   }
@@ -56,7 +55,7 @@ const App = () => {
   const blogForm = () => {
     return (
       <div>
-        <Toggable buttonLabel='create blog post' ref={blogFormRef}>
+        <Togglable buttonLabel='create blog post' ref={blogFormRef}>
           <CreateBlogForm
             addBlog={addBlog}
             valueTitleNewBlog={valueTitleNewBlog}
@@ -66,7 +65,7 @@ const App = () => {
             handleTitleBlog={handleTitleBlog}
             handleUrlBlog={handleUrlBlog}
           />
-        </Toggable>
+        </Togglable>
       </div>
     )
   }
@@ -127,21 +126,21 @@ const App = () => {
       setValueAuthorNewBlog('')
       setValueUrlNewBlog('')
       blogFormRef.current.toggleVisibility() // Hide creation form
-      setNotificationMessage({status: 'ok', message: 'Blog added successfully'});
+      setNotificationMessage({ status: 'ok', message: 'Blog added successfully' });
       setTimeout(() => {
         setNotificationMessage({status: 'ok', message: ''})
       }, 5000)
     } catch(exception) {
-      setNotificationMessage({status: 'ko', message: 'Error adding blog'});
+      setNotificationMessage({ status: 'ko', message: 'Error adding blog' });
       setTimeout(() => {
-        setNotificationMessage({status: 'ok', message: ''})
+        setNotificationMessage({ status: 'ok', message: '' })
       }, 5000)
     }
   }
 
   const addBlogLike = async id => {
     const blogToUpdate = blogs.find(blogs => blogs.id === id)
-    const updatedBlog = {...blogToUpdate, likes: blogToUpdate.likes + 1}
+    const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 }
     await blogService.update(id, updatedBlog)
     setBlogs(blogs.map((blog) => blog.id === id ? updatedBlog : blog))
   }
