@@ -1,25 +1,25 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef } from 'react'
 
-import Blog from "./components/Blog"
-import Notification from "./components/Notification"
-import LoginForm from "./components/LoginForm"
-import CreateBlogForm from "./components/CreateBlogForm"
-import Togglable from "./components/Togglable"
+import Blog from './components/Blog'
+import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import CreateBlogForm from './components/CreateBlogForm'
+import Togglable from './components/Togglable'
 
-import blogService from "./services/blogs"
-import loginService from "./services/login"
+import blogService from './services/blogs'
+import loginService from './services/login'
 
 const App = () => {
   const [blogs,    setBlogs] = useState([])
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user,     setUser] = useState(null)
 
-  const [valueTitleNewBlog,  setValueTitleNewBlog] = useState("")
-  const [valueAuthorNewBlog, setValueAuthorNewBlog] = useState("")
-  const [valueUrlNewBlog,    setValueUrlNewBlog] = useState("")
+  const [valueTitleNewBlog,  setValueTitleNewBlog] = useState('')
+  const [valueAuthorNewBlog, setValueAuthorNewBlog] = useState('')
+  const [valueUrlNewBlog,    setValueUrlNewBlog] = useState('')
 
-  const [notificationMessage, setNotificationMessage] = useState({ status: 'ok', message: ''})
+  const [notificationMessage, setNotificationMessage] = useState({ status: 'ok', message: '' })
 
   const blogFormRef = useRef()
 
@@ -42,8 +42,8 @@ const App = () => {
         <Togglable buttonLabel='login'>
           <LoginForm
             handleSubmit={handleLogin}
-            handleUsernameChange={({target}) => setUsername(target.value)}
-            handlePasswordChange={({target}) => setPassword(target.value)}
+            handleUsernameChange={ ({ target }) => setUsername(target.value) }
+            handlePasswordChange={ ({ target }) => setPassword(target.value) }
             username={username}
             password={password}
           />
@@ -83,13 +83,13 @@ const App = () => {
         'loggedBlogappUser', JSON.stringify(user)
       )
       setUser(user)
-      setUsername("")
-      setPassword("")
+      setUsername('')
+      setPassword('')
     } catch (exception) {
       console.log(exception)
-      setNotificationMessage({status: 'ko', message: 'Wrong credentials'});
+      setNotificationMessage({ status: 'ko', message: 'Wrong credentials' })
       setTimeout(() => {
-        setNotificationMessage({status: 'ok', message: ''})
+        setNotificationMessage({ status: 'ok', message: '' })
       }, 5000)
     }
   }
@@ -112,7 +112,7 @@ const App = () => {
   }
 
   const addBlog = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     const blogObject = {
       title: valueTitleNewBlog,
       author: valueAuthorNewBlog,
@@ -126,12 +126,12 @@ const App = () => {
       setValueAuthorNewBlog('')
       setValueUrlNewBlog('')
       blogFormRef.current.toggleVisibility() // Hide creation form
-      setNotificationMessage({ status: 'ok', message: 'Blog added successfully' });
+      setNotificationMessage({ status: 'ok', message: 'Blog added successfully' })
       setTimeout(() => {
-        setNotificationMessage({status: 'ok', message: ''})
+        setNotificationMessage({ status: 'ok', message: '' })
       }, 5000)
     } catch(exception) {
-      setNotificationMessage({ status: 'ko', message: 'Error adding blog' });
+      setNotificationMessage({ status: 'ko', message: 'Error adding blog' })
       setTimeout(() => {
         setNotificationMessage({ status: 'ok', message: '' })
       }, 5000)
@@ -148,7 +148,7 @@ const App = () => {
   const removeBlog = async id => {
     const blogToDelete = blogs.find(blogs => blogs.id === id)
     //await blogService.remove(id)
-    if (window.confirm(`Remove blog ${blogToDelete.title}?`)) {
+    if (window.confirm(`Remove blog ${ blogToDelete.title }?`)) {
       setBlogs(blogs.filter((blog) => (blog.id !== id)))
     }
   }
@@ -162,7 +162,7 @@ const App = () => {
         <Blog
           key={blogs.id}
           blog={blogs}
-          currentUsername={user.username}
+          currentUsername={ user.username }
           addBlogLike={() => addBlogLike(blogs.id)}
           removeBlog={() => removeBlog(blogs.id)}
         />
