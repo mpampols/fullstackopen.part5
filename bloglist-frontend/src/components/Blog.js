@@ -26,15 +26,14 @@ const Blog = ({
   }
 
   return (
-    <div style={blogStyle}>
-      {blog.title}&nbsp;
+    <div className='blog' style={blogStyle}>
+      <div className='contents'>{blog.title} {blog.author}</div>
       <button onClick={toggleVisibility} style={showWhenVisible}>view</button>
       <button onClick={toggleVisibility} style={hideWhenVisible}>hide</button>
-      <div style={hideWhenVisible}>
+      <div className='additionalInfo' style={hideWhenVisible}>
         <ul>
           <li>URL: {blog.url}</li>
           <li>Likes: {blog.likes} <button onClick={addBlogLike}>like</button></li>
-          <li>Author: {blog.author}</li>
         </ul>
         <button style={showIfAuthor} onClick={removeBlog}>remove</button>
       </div>
