@@ -14,11 +14,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user,     setUser] = useState(null)
-
-  const [valueTitleNewBlog,  setValueTitleNewBlog] = useState('')
-  const [valueAuthorNewBlog, setValueAuthorNewBlog] = useState('')
-  const [valueUrlNewBlog,    setValueUrlNewBlog] = useState('')
-
   const [notificationMessage, setNotificationMessage] = useState({ status: 'ok', message: '' })
 
   const blogFormRef = useRef()
@@ -36,35 +31,40 @@ const App = () => {
     }
   }, [])
 
-  const loginForm = () => {
-    return (
-      <div>
-        <Togglable buttonLabel='login'>
-          <LoginForm
-            handleSubmit={handleLogin}
-            handleUsernameChange={ ({ target }) => setUsername(target.value) }
-            handlePasswordChange={ ({ target }) => setPassword(target.value) }
-            username={username}
-            password={password}
-          />
-        </Togglable>
-      </div>
-    )
+  const loginForm = () => (
+    <Togglable buttonLabel='login' ref={blogFormRef}>
+      <LoginForm
+        handleSubmit={handleLogin}
+        handleUsernameChange={ ({ target }) => setUsername(target.value) }
+        handlePasswordChange={ ({ target }) => setPassword(target.value) }
+        username={username}
+        password={password}
+      />
+    </Togglable>
+  )
+
+  const addBlog = async (blog) => {
+    try {
+      const response = await blogService.create(blog)
+      setBlogs(blogs.concat(response))
+      blogFormRef.current.toggleVisibility() // Hide creation form
+      setNotificationMessage({ status: 'ok', message: 'Blog added successfully' })
+      setTimeout(() => {
+        setNotificationMessage({ status: 'ok', message: '' })
+      }, 5000)
+    } catch(exception) {
+      setNotificationMessage({ status: 'ko', message: 'Error adding blog' })
+      setTimeout(() => {
+        setNotificationMessage({ status: 'ok', message: '' })
+      }, 5000)
+    }
   }
 
   const blogForm = () => {
     return (
       <div>
         <Togglable buttonLabel='create blog post' ref={blogFormRef}>
-          <CreateBlogForm
-            addBlog={addBlog}
-            valueTitleNewBlog={valueTitleNewBlog}
-            valueAuthorNewBlog={valueAuthorNewBlog}
-            valueUrlNewBlog={valueUrlNewBlog}
-            handleAuthorBlog={handleAuthorBlog}
-            handleTitleBlog={handleTitleBlog}
-            handleUrlBlog={handleUrlBlog}
-          />
+          <CreateBlogForm addBlog={addBlog} />
         </Togglable>
       </div>
     )
@@ -97,45 +97,6 @@ const App = () => {
   const handleLogoutClick = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
-  }
-
-  const handleTitleBlog = (event) => {
-    setValueTitleNewBlog(event.target.value)
-  }
-
-  const handleAuthorBlog = (event) => {
-    setValueAuthorNewBlog(event.target.value)
-  }
-
-  const handleUrlBlog = (event) => {
-    setValueUrlNewBlog(event.target.value)
-  }
-
-  const addBlog = async (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: valueTitleNewBlog,
-      author: valueAuthorNewBlog,
-      url: valueUrlNewBlog
-    }
-
-    try {
-      const response = await blogService.create(blogObject)
-      setBlogs(blogs.concat(response))
-      setValueTitleNewBlog('')
-      setValueAuthorNewBlog('')
-      setValueUrlNewBlog('')
-      blogFormRef.current.toggleVisibility() // Hide creation form
-      setNotificationMessage({ status: 'ok', message: 'Blog added successfully' })
-      setTimeout(() => {
-        setNotificationMessage({ status: 'ok', message: '' })
-      }, 5000)
-    } catch(exception) {
-      setNotificationMessage({ status: 'ko', message: 'Error adding blog' })
-      setTimeout(() => {
-        setNotificationMessage({ status: 'ok', message: '' })
-      }, 5000)
-    }
   }
 
   const addBlogLike = async id => {

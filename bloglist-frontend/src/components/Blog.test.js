@@ -4,18 +4,22 @@ import { fireEvent, render } from '@testing-library/react'
 import Blog from './Blog'
 
 describe('Blog component', () => {
-  test('renders content', () => {
-    const blog = {
+  let blog, component
+
+  beforeEach(() => {
+    blog = {
       title: 'Blog title',
       author: 'Blog author',
       url: 'https://google.com',
       likes: 10
     }
 
-    const component = render (
+    component = render (
       <Blog blog={blog} />
     )
+  })
 
+  test('renders content', () => {
     const div = component.container.querySelector('.contents')
     expect(div).toHaveTextContent(
       'Blog title Blog author'
@@ -26,17 +30,6 @@ describe('Blog component', () => {
   })
 
   test('toggled content is shown when button clicked', () => {
-    const blog = {
-      title: 'Blog title',
-      author: 'Blog author',
-      url: 'https://google.com',
-      likes: 10
-    }
-
-    const component = render (
-      <Blog blog={blog} />
-    )
-
     const viewButton = component.container.querySelector('.viewButton')
     fireEvent.click(viewButton)
 
@@ -45,13 +38,6 @@ describe('Blog component', () => {
   })
 
   test('clicking like button twice calls event handler twice', () => {
-    const blog = {
-      title: 'Blog title',
-      author: 'Blog author',
-      url: 'https://google.com',
-      likes: 10
-    }
-
     const mockHandler = jest.fn()
 
     const component = render (
