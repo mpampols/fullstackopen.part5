@@ -40,7 +40,7 @@ const CreateBlogForm = ({ addBlog }) => {
         Title: <input id='title' value={title} onChange={handleTitleBlog} /> <br/>
         Author: <input id='author' value={author} onChange={handleAuthorBlog} /> <br/>
         URL: <input id='url' value={url} onChange={handleUrlBlog} /> <br/>
-        <button type="submit">save</button>
+        <button id='createBlogButton' type="submit">save</button>
       </form>
     </div>
   )
