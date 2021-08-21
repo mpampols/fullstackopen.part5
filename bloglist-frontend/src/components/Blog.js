@@ -7,11 +7,11 @@ const Blog = ({
   removeBlog
 }) => {
   const [visible, setVisible] = useState(true)
-  const blogAuthor = blog.user ? blog.user.username : null
+  const blogAuthor = blog.user.username ? blog.user.username : null
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
-  const showIfAuthor = { display: currentUsername === blogAuthor ? '' : 'none' }
+  const showIfAuthor = { display: currentUsername.username === blogAuthor ? '' : 'none' }
 
   const blogStyle = {
     paddingTop: 10,
@@ -26,7 +26,7 @@ const Blog = ({
   }
 
   return (
-    <div className='blog' style={blogStyle}>
+    <div className='blog' style={blogStyle} data-likes={blog.likes}>
       <div className='contents'>{blog.title} {blog.author}</div>
       <button className='viewButton' onClick={toggleVisibility} style={showWhenVisible}>view</button>
       <button className='hideButton' onClick={toggleVisibility} style={hideWhenVisible}>hide</button>

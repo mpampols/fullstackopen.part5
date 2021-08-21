@@ -27,7 +27,6 @@ const CreateBlogForm = ({ addBlog }) => {
     }
 
     addBlog(newBlog)
-
     setTitle('')
     setAuthor('')
     setUrl('')
