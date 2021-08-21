@@ -32,7 +32,7 @@ const App = () => {
   }, [])
 
   const loginForm = () => (
-    <Togglable buttonLabel='login' ref={blogFormRef}>
+    <Togglable buttonLabel='login' visible='true' ref={blogFormRef}>
       <LoginForm
         handleSubmit={handleLogin}
         handleUsernameChange={ ({ target }) => setUsername(target.value) }
